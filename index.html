@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>조선 역사 챌린지</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* --- [디자인 변수: 모던 한옥] --- */
+        :root {
+            --bg-paper: #f4f0e6;       /* 한지 미색 */
+            --bg-cream: #faf8f3;       /* 밝은 배경 */
+            --ink-text: #2c2c2c;       /* 먹색 */
+            --wood-dark: #4e342e;      /* 고동색(기둥) */
+            --wood-light: #8d6e63;     /* 갈색(장식) */
+            --accent-blue: #1565c0;    /* 청색(강조) */
+            --accent-red: #c62828;     /* 적색(오답) */
+            --accent-green: #2e7d32;   /* 녹색(정답) */
+            --accent-gold: #bf8c00;    /* 금색(콤보) */
+            --shadow-paper: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,8 +27,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #e0ded5;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(139, 119, 101, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 119, 101, 0.1) 0%, transparent 50%);
+            color: var(--ink-text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,27 +40,51 @@
             padding: 20px;
         }
 
+        /* 메인 프레임 (창호지 문틀 느낌) */
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            max-width: 500px;
+            background-color: var(--bg-paper);
+            border: 10px solid var(--wood-dark);
+            border-radius: 4px;
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.3),
+                inset 0 0 30px rgba(255,255,255,0.3);
+            padding: 25px;
+            max-width: 480px;
             width: 100%;
+            position: relative;
+        }
+
+        /* 문틀 장식 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 10px;
+            background: var(--wood-light);
+            border-radius: 0 0 4px 4px;
         }
 
         h1 {
+            font-family: 'Nanum Myeongjo', serif;
             text-align: center;
-            color: #1a1a2e;
-            margin-bottom: 10px;
-            font-size: 1.8rem;
+            color: var(--wood-dark);
+            margin-bottom: 8px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
         }
 
         .subtitle {
+            font-family: 'Nanum Myeongjo', serif;
             text-align: center;
-            color: #666;
+            color: var(--wood-light);
             margin-bottom: 25px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #d4cfc4;
+            padding-bottom: 15px;
         }
 
         .stats {
@@ -49,8 +92,9 @@
             justify-content: space-around;
             margin-bottom: 20px;
             padding: 15px;
-            background: #f8f9fa;
-            border-radius: 12px;
+            background: var(--bg-cream);
+            border: 2px solid #d4cfc4;
+            border-radius: 4px;
         }
 
         .stat {
@@ -58,23 +102,25 @@
         }
 
         .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #e94560;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--wood-dark);
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            color: #666;
+            font-size: 0.75rem;
+            color: var(--wood-light);
+            margin-top: 2px;
         }
 
         .hearts {
-            font-size: 1.5rem;
-            letter-spacing: 5px;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
         }
 
         .combo {
-            color: #ff9800 !important;
+            color: var(--accent-gold) !important;
         }
 
         .mode-select {
@@ -82,55 +128,76 @@
         }
 
         .mode-btn {
+            font-family: 'Nanum Myeongjo', serif;
             width: 100%;
-            padding: 20px;
-            margin: 10px 0;
+            padding: 18px;
+            margin: 8px 0;
             font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 12px;
+            font-weight: 700;
+            border: 3px solid var(--wood-dark);
+            border-radius: 4px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
 
         .mode-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-btn:active {
+            transform: translateY(0);
         }
 
         .mode-timeline {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: var(--bg-cream);
+            color: var(--wood-dark);
+        }
+
+        .mode-timeline:hover {
+            background: var(--wood-dark);
+            color: var(--bg-paper);
         }
 
         .mode-ox {
-            background: linear-gradient(135deg, #e94560, #0f3460);
-            color: white;
+            background: var(--wood-dark);
+            color: var(--bg-paper);
+        }
+
+        .mode-ox:hover {
+            background: var(--wood-light);
         }
 
         .mode-desc {
-            font-size: 0.85rem;
-            font-weight: normal;
-            opacity: 0.9;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.8;
             margin-top: 5px;
         }
 
         .question-box {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            min-height: 120px;
+            background: var(--bg-cream);
+            border: 3px double var(--wood-dark);
+            border-radius: 4px;
+            padding: 25px 20px;
+            margin-bottom: 15px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: var(--shadow-paper);
         }
 
         .question-text {
-            font-size: 1.2rem;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 1.15rem;
+            color: var(--ink-text);
+            line-height: 1.7;
             text-align: center;
+            word-break: keep-all;
         }
 
         .ox-buttons {
@@ -140,17 +207,23 @@
 
         .ox-btn {
             flex: 1;
-            padding: 25px;
-            font-size: 2.5rem;
+            padding: 20px;
+            font-size: 2.2rem;
             font-weight: bold;
-            border: none;
-            border-radius: 15px;
+            border: 4px solid;
+            border-radius: 50%;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
+            background: var(--bg-cream);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .ox-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .ox-btn:active {
@@ -158,46 +231,89 @@
         }
 
         .btn-o {
-            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .btn-o:hover {
+            background: var(--accent-green);
             color: white;
         }
 
         .btn-x {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .btn-x:hover {
+            background: var(--accent-red);
             color: white;
         }
 
         .ox-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
+            transform: none !important;
         }
 
         .timeline-instruction {
+            font-family: 'Nanum Myeongjo', serif;
             text-align: center;
-            color: #666;
+            color: var(--wood-light);
             margin-bottom: 15px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
         .timeline-cards {
-            min-height: 300px;
+            min-height: 280px;
+            position: relative;
+        }
+
+        /* 타임라인 선 */
+        .timeline-cards::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #ccc;
+            z-index: 0;
         }
 
         .timeline-card {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            background: var(--bg-cream);
+            border: 2px solid var(--wood-dark);
+            color: var(--ink-text);
+            padding: 12px 15px 12px 40px;
+            border-radius: 4px;
+            margin-bottom: 8px;
             cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             user-select: none;
+            position: relative;
+            box-shadow: var(--shadow-paper);
+        }
+
+        /* 타임라인 점 */
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--wood-dark);
+            border: 2px solid var(--bg-paper);
+            border-radius: 50%;
+            z-index: 1;
         }
 
         .timeline-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateX(5px);
+            border-color: var(--wood-light);
         }
 
         .timeline-card.dragging {
@@ -206,65 +322,83 @@
         }
 
         .timeline-card.correct {
-            background: linear-gradient(135deg, #4caf50, #45a049);
+            background: #e8f5e9;
+            border-color: var(--accent-green);
+        }
+
+        .timeline-card.correct::before {
+            background: var(--accent-green);
         }
 
         .timeline-card.incorrect {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
+            background: #ffebee;
+            border-color: var(--accent-red);
+        }
+
+        .timeline-card.incorrect::before {
+            background: var(--accent-red);
         }
 
         .card-year {
-            font-size: 0.85rem;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 0.8rem;
             opacity: 0;
-            margin-top: 5px;
+            margin-top: 4px;
+            color: var(--wood-light);
         }
 
         .timeline-card.show-year .card-year {
-            opacity: 0.8;
+            opacity: 1;
         }
 
         .card-event {
-            font-weight: bold;
+            font-family: 'Nanum Myeongjo', serif;
+            font-weight: 700;
         }
 
         .feedback {
             text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
             font-weight: bold;
             display: none;
+            border: 2px solid;
         }
 
         .feedback.correct {
             background: #e8f5e9;
-            color: #2e7d32;
+            color: var(--accent-green);
+            border-color: var(--accent-green);
             display: block;
         }
 
         .feedback.incorrect {
             background: #ffebee;
-            color: #c62828;
+            color: var(--accent-red);
+            border-color: var(--accent-red);
             display: block;
         }
 
         .feedback .explanation {
+            font-family: 'Noto Sans KR', sans-serif;
             font-weight: normal;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-top: 8px;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .btn {
+            font-family: 'Nanum Myeongjo', serif;
             width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 10px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 2px solid var(--wood-dark);
+            border-radius: 4px;
             cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 10px;
+            transition: all 0.2s;
+            margin-top: 8px;
         }
 
         .btn:hover {
@@ -272,18 +406,31 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: var(--wood-dark);
+            color: var(--bg-paper);
+        }
+
+        .btn-primary:hover {
+            background: var(--wood-light);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #9e9e9e, #757575);
-            color: white;
+            background: transparent;
+            color: var(--wood-dark);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0,0,0,0.05);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #4caf50, #45a049);
+            background: var(--accent-green);
+            border-color: var(--accent-green);
             color: white;
+        }
+
+        .btn-success:hover {
+            background: #1b5e20;
         }
 
         .result {
@@ -291,44 +438,48 @@
         }
 
         .result-score {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #e94560;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--wood-dark);
             margin: 20px 0;
         }
 
         .result-text {
-            font-size: 1.2rem;
-            color: #666;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 1.1rem;
+            color: var(--wood-light);
             margin-bottom: 10px;
         }
 
         .result-grade {
-            font-size: 1.5rem;
+            font-family: 'Nanum Myeongjo', serif;
+            font-size: 1.3rem;
             margin-bottom: 20px;
+            color: var(--accent-gold);
         }
 
         .timer-bar {
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            height: 6px;
+            background: #d4cfc4;
+            border-radius: 3px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
         .timer-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
-            border-radius: 4px;
+            background: var(--accent-green);
+            border-radius: 3px;
             transition: width 0.1s linear;
         }
 
         .timer-fill.warning {
-            background: linear-gradient(90deg, #ff9800, #ffc107);
+            background: var(--accent-gold);
         }
 
         .timer-fill.danger {
-            background: linear-gradient(90deg, #f44336, #e91e63);
+            background: var(--accent-red);
         }
 
         .hidden {
@@ -337,49 +488,65 @@
 
         .level-select {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .level-btn {
+            font-family: 'Nanum Myeongjo', serif;
             flex: 1;
             padding: 10px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 8px;
+            border: 2px solid var(--wood-dark);
+            background: var(--bg-cream);
+            color: var(--wood-dark);
+            border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
             transition: all 0.2s;
         }
 
         .level-btn.active {
-            background: #667eea;
-            color: white;
+            background: var(--wood-dark);
+            color: var(--bg-paper);
+        }
+
+        .level-btn:hover:not(.active) {
+            background: rgba(0,0,0,0.05);
         }
 
         .progress-text {
+            font-family: 'Nanum Myeongjo', serif;
             text-align: center;
-            color: #666;
+            color: var(--wood-light);
             margin-bottom: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container > div:not(.hidden) {
+            animation: fadeIn 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>조선 역사 챌린지</h1>
-        <p class="subtitle">조선 전기의 역사를 게임으로 배워보세요!</p>
+        <h1>조선 역사 탐험</h1>
+        <p class="subtitle">역사의 흐름을 읽고, 진실을 파헤쳐라!</p>
 
         <!-- 메인 메뉴 -->
         <div id="menu" class="mode-select">
             <button class="mode-btn mode-ox" onclick="startOXQuiz()">
-                OX 스피드 퀴즈
-                <div class="mode-desc">빠르게 OX를 맞춰보세요!</div>
+                스피드 OX 퀴즈
+                <div class="mode-desc">제한 시간 안에 참과 거짓을 가려내세요</div>
             </button>
             <button class="mode-btn mode-timeline" onclick="startTimeline()">
-                타임라인 정렬
-                <div class="mode-desc">역사적 사건을 순서대로 배열하세요</div>
+                타임라인 챌린지
+                <div class="mode-desc">역사적 사건을 시간 순서대로 배열하세요</div>
             </button>
         </div>
 
@@ -466,52 +633,167 @@
     <script>
         // ============ OX 퀴즈 데이터 ============
         const oxQuestions = [
+            // 조선 건국 관련
             { q: "조선은 1392년에 건국되었다.", a: true, exp: "이성계가 1392년에 조선을 건국했습니다." },
+            { q: "이성계는 위화도에서 군대를 돌이켜 권력을 잡았다.", a: true, exp: "1388년 위화도 회군으로 이성계가 권력을 장악했습니다." },
+            { q: "조선의 첫 번째 수도는 한양이었다.", a: false, exp: "조선 건국 후 1394년에 수도를 한양으로 옮겼습니다. 처음엔 개경이었습니다." },
+            { q: "이성계는 요동 공격을 찬성하였다.", a: false, exp: "이성계는 요동 공격을 반대하였고, 위화도에서 군대를 돌이켰습니다." },
+            { q: "고려 말 권문세족은 몽골에 기대어 횡포를 부렸다.", a: true, exp: "권문세족은 고려가 몽골의 간섭을 받던 시기에 나타나 권력을 누렸습니다." },
+            { q: "신진 사대부는 성리학을 공부하고 과거를 치러 관리가 되었다.", a: true, exp: "신진 사대부는 고려 말에 등장한 정치 세력입니다." },
+            { q: "정몽주는 새로운 나라를 세워야 한다고 주장하였다.", a: false, exp: "정몽주는 고려를 지키면서 개혁하자고 주장했습니다." },
+            { q: "정도전은 새로운 나라를 세워야 한다고 주장하였다.", a: true, exp: "정도전은 낡은 틀을 버리고 새로운 나라를 만들어야 한다고 했습니다." },
+            { q: "이방원이 정몽주를 제거하였다.", a: true, exp: "이성계의 아들 이방원이 정몽주를 비롯한 반대 세력을 제거했습니다." },
+            { q: "명은 1368년부터 1644년까지 이어진 중국의 나라이다.", a: true, exp: "명은 1368년에서 1644년까지 이어진 중국의 나라입니다." },
+
+            // 조선 초기 제도
+            { q: "태종은 16세 이상의 남자에게 호패를 차게 하였다.", a: true, exp: "태종은 인구를 정확히 파악하려고 호패 제도를 시행했습니다." },
+            { q: "조선은 전국을 8개 도로 나누었다.", a: true, exp: "태종 때 지방 제도를 정비하여 전국을 8개 도로 나누었습니다." },
+            { q: "호패는 조선 시대 신분증과 같은 역할을 했다.", a: true, exp: "호패는 호적에 등록된 사람임을 증명하는 패입니다." },
+            { q: "경국대전은 조선의 법전이다.", a: true, exp: "경국대전은 성종 때 완성된 조선의 기본 법전입니다." },
+            { q: "경국대전에는 나라의 운영 방법과 형벌 규정이 담겨 있다.", a: true, exp: "경국대전에는 나라의 운영 방법, 제도, 형벌 규정 등이 담겨 있습니다." },
+            { q: "조선에서 남자는 15세, 여자는 14세가 되면 결혼할 수 있었다.", a: true, exp: "경국대전에 규정된 조선 시대 결혼 가능 나이입니다." },
+
+            // 세종과 영토 확장
+            { q: "세종은 쓰시마섬(대마도)을 정벌하였다.", a: true, exp: "세종은 왜구를 물리치고자 쓰시마섬을 정벌했습니다." },
+            { q: "세종은 4군과 6진을 개척하여 영토를 넓혔다.", a: true, exp: "여진을 몰아내고 압록강과 두만강까지 영토를 넓혔습니다." },
+            { q: "4군 6진 개척으로 압록강과 두만강까지 영토가 확장되었다.", a: true, exp: "세종 때 4군과 6진을 개척하여 북방 영토를 확장했습니다." },
+
+            // 한양 도성
+            { q: "경복궁은 조선의 두 번째 궁궐이다.", a: false, exp: "경복궁은 조선이 첫 번째로 지은 궁궐입니다." },
+            { q: "경복궁은 '임금이 덕으로 나라를 다스려 큰 복을 누릴 것'이라는 뜻이다.", a: true, exp: "경복궁에는 큰 복을 누린다는 의미가 담겨 있습니다." },
+            { q: "숭례문은 한양의 남쪽 문으로 '예의'를 뜻한다.", a: true, exp: "숭례문은 '예(禮)'를 존중한다는 의미를 담았습니다." },
+            { q: "흥인지문은 한양의 동쪽 문이다.", a: true, exp: "흥인지문은 동쪽 문으로 '인자함(仁)'을 일으킨다는 뜻입니다." },
+            { q: "숙정문은 한양의 남쪽 문이다.", a: false, exp: "숙정문은 한양의 북쪽 문입니다. '숙정'은 엄숙하게 다스린다는 뜻입니다." },
+            { q: "돈의문은 한양의 서쪽 문이다.", a: true, exp: "돈의문은 서쪽 문으로 '의리(義)'를 지켜야 한다는 의미입니다." },
+            { q: "종묘는 왕과 왕비의 위패를 모시고 제사를 지내던 곳이다.", a: true, exp: "종묘는 국왕이 조상에게 제사를 지내던 곳입니다." },
+            { q: "사직단은 토지의 신과 곡식의 신에게 제사를 지내던 곳이다.", a: true, exp: "사직단은 농사를 관장하는 신에게 제사를 지내던 곳입니다." },
+            { q: "한양의 건축물 이름은 유교의 덕목에서 따왔다.", a: true, exp: "인(仁), 의(義), 예(禮) 등 유교의 덕목에서 이름을 지었습니다." },
+
+            // 훈민정음과 세종
             { q: "훈민정음은 세종대왕이 만들었다.", a: true, exp: "세종대왕이 1443년에 훈민정음을 창제했습니다." },
             { q: "훈민정음은 '백성을 가르치는 바른 소리'라는 뜻이다.", a: true, exp: "훈민정음(訓民正音)은 백성을 가르치는 바른 소리라는 의미입니다." },
             { q: "훈민정음은 총 28자이다.", a: true, exp: "훈민정음은 스물여덟 자로 이루어져 있습니다." },
-            { q: "이성계는 위화도에서 군대를 돌이켜 권력을 잡았다.", a: true, exp: "1388년 위화도 회군으로 이성계가 권력을 장악했습니다." },
-            { q: "조선의 첫 번째 수도는 한양이었다.", a: false, exp: "조선 건국 후 1394년에 수도를 한양으로 옮겼습니다. 처음엔 개경이었습니다." },
-            { q: "경국대전은 조선의 법전이다.", a: true, exp: "경국대전은 성종 때 완성된 조선의 기본 법전입니다." },
+            { q: "세종은 일부 신하들의 반대를 무릅쓰고 훈민정음을 만들었다.", a: true, exp: "글을 몰라 어려움을 겪는 백성을 위해 반대를 무릅쓰고 만들었습니다." },
+            { q: "집현전은 세종이 궁궐에 설치한 학문 연구 기관이다.", a: true, exp: "집현전은 도서의 수집과 보관, 학문 활동을 하는 기관입니다." },
+
+            // 과학 기구
             { q: "앙부일구는 물시계이다.", a: false, exp: "앙부일구는 해시계이고, 물시계는 자격루입니다." },
             { q: "자격루는 자동으로 시간을 알려주는 물시계이다.", a: true, exp: "자격루는 물이 흐르면 자동으로 종을 쳐서 시간을 알려줬습니다." },
             { q: "장영실은 신분이 낮았지만 과학 기구를 만들었다.", a: true, exp: "세종은 신분이 낮은 장영실을 관리로 뽑아 기술을 연구하게 했습니다." },
             { q: "측우기는 바람의 세기를 측정하는 기구이다.", a: false, exp: "측우기는 강우량(비의 양)을 측정하는 기구입니다." },
-            { q: "임진왜란은 1592년에 일어났다.", a: true, exp: "1592년 일본이 조선을 침략하여 임진왜란이 시작되었습니다." },
-            { q: "임진왜란 때 이순신은 육지에서 싸웠다.", a: false, exp: "이순신은 수군(해군)을 이끌고 바다에서 일본군과 싸웠습니다." },
-            { q: "한산도 대첩에서 학익진 전술이 사용되었다.", a: true, exp: "이순신의 수군이 학이 날개를 펼치는 모양의 학익진 전술로 승리했습니다." },
-            { q: "의병은 나라에서 조직한 정규 군대이다.", a: false, exp: "의병은 백성이 자발적으로 조직한 군대입니다." },
-            { q: "곽재우는 임진왜란 때 활약한 의병장이다.", a: true, exp: "곽재우는 의령에서 의병을 일으킨 대표적인 의병장입니다." },
-            { q: "행주 대첩에서 권율 장군이 승리하였다.", a: true, exp: "권율이 이끄는 관군이 행주산성에서 일본군을 물리쳤습니다." },
-            { q: "병자호란 때 인조는 남한산성으로 피란하였다.", a: true, exp: "1636년 병자호란 때 인조는 남한산성으로 피란했습니다." },
-            { q: "병자호란은 일본의 침략으로 일어났다.", a: false, exp: "병자호란은 청나라의 침략으로 일어났습니다." },
+            { q: "혼천의는 해와 달, 별의 움직임과 위치를 관찰하는 기구이다.", a: true, exp: "'혼천'은 우주를 뜻하고, '의'는 천문 관측기구를 일컫습니다." },
+            { q: "간의는 혼천의의 구조를 간단하게 만든 것이다.", a: true, exp: "간의는 행성과 별의 위치, 시간, 방위를 측정하는 데 이용했습니다." },
+            { q: "앙부일구의 '앙부'는 하늘을 우러러보는 모양의 가마솥을 뜻한다.", a: true, exp: "'일구'는 해의 그림자를 뜻합니다." },
+            { q: "자격루는 밤이나 흐린 날에도 시간을 알 수 있었다.", a: true, exp: "물시계라서 날씨에 관계없이 시간을 알 수 있었습니다." },
+            { q: "『칠정산』은 조선에 맞는 달력을 만들기 위한 역법책이다.", a: true, exp: "한성(한양)을 기준으로 하는 역법책입니다." },
+            { q: "농사직설은 우리 땅에 맞는 농사법을 정리한 책이다.", a: true, exp: "세종 때 각 지역 농민들의 경험을 바탕으로 만든 농사책입니다." },
+
+            // 문화와 예술
+            { q: "조선 전기에는 산수화가 유행하였다.", a: true, exp: "산과 물이 어우러진 자연을 그리는 산수화가 유행했습니다." },
+            { q: "분청사기와 백자는 조선 전기의 도자기이다.", a: true, exp: "회청색 분청사기와 흰색 백자가 조선 전기에 만들어졌습니다." },
+            { q: "안견은 '몽유도원도'를 그린 화가이다.", a: true, exp: "안견은 조선에서 그림을 그리는 관리였습니다." },
+            { q: "신사임당은 조선의 대표적인 화가이다.", a: true, exp: "신사임당은 시, 글씨, 그림에 모두 뛰어난 예술가였습니다." },
+            { q: "신사임당의 아들 이이는 조선을 대표하는 학자가 되었다.", a: true, exp: "이이(율곡)는 조선 중기의 대표적인 유학자입니다." },
+            { q: "신사임당의 '초충도'는 식물과 동물을 어우러지게 그린 그림이다.", a: true, exp: "화초와 벌레 등 다양한 소재를 사실적으로 그렸습니다." },
+
+            // 유교와 사회
             { q: "조선은 유교를 나라의 통치 원리로 삼았다.", a: true, exp: "조선은 유교의 가르침에 따라 나라를 다스렸습니다." },
             { q: "삼강행실도는 유교의 가르침을 글과 그림으로 설명한 책이다.", a: true, exp: "삼강행실도에는 충신, 효자 등의 이야기가 실려 있습니다." },
             { q: "조선 시대 양반은 과거를 치러 관리가 될 수 있었다.", a: true, exp: "양반 남성은 유교 경전을 공부하고 과거시험을 볼 수 있었습니다." },
-            { q: "신사임당은 조선의 대표적인 화가이다.", a: true, exp: "신사임당은 시, 글씨, 그림에 모두 뛰어난 예술가였습니다." },
-            { q: "신사임당의 아들 이이는 조선을 대표하는 학자가 되었다.", a: true, exp: "이이(율곡)는 조선 중기의 대표적인 유학자입니다." },
-            { q: "농사직설은 우리 땅에 맞는 농사법을 정리한 책이다.", a: true, exp: "세종 때 각 지역 농민들의 경험을 바탕으로 만든 농사책입니다." },
+            { q: "조선 시대 신분은 양반, 중인, 상민, 천민으로 구분하였다.", a: true, exp: "양인을 다시 양반, 중인, 상민으로 나누어 실제로는 네 신분이었습니다." },
+            { q: "중인은 의관, 화원, 역관 등 전문적인 일을 하였다.", a: true, exp: "관청에서 일하거나 전문적인 일을 하는 신분이었습니다." },
+            { q: "상민은 대부분 농사를 지으며 살았다.", a: true, exp: "거두어들인 곡식의 일부를 세금으로 내거나 땅 주인에게 바쳤습니다." },
+            { q: "천민은 대부분 노비였다.", a: true, exp: "양반집이나 관공서에 속한 노비가 대부분이었습니다." },
+            { q: "조선에서는 부모를 따라 신분이 정해졌다.", a: true, exp: "조선에서는 부모를 따라 신분이 정해졌습니다." },
+
+            // 임진왜란
+            { q: "임진왜란은 1592년에 일어났다.", a: true, exp: "1592년 일본이 조선을 침략하여 임진왜란이 시작되었습니다." },
+            { q: "도요토미 히데요시가 임진왜란을 일으켰다.", a: true, exp: "일본 전국을 통일한 도요토미 히데요시가 조선을 침략했습니다." },
+            { q: "임진왜란 때 이순신은 육지에서 싸웠다.", a: false, exp: "이순신은 수군(해군)을 이끌고 바다에서 일본군과 싸웠습니다." },
+            { q: "한산도 대첩에서 학익진 전술이 사용되었다.", a: true, exp: "이순신의 수군이 학이 날개를 펼치는 모양의 학익진 전술로 승리했습니다." },
+            { q: "조선 수군은 옥포 해전에서 첫 승리를 거두었다.", a: true, exp: "여수에서 출발하여 거제의 옥포 해전에서 첫 승리를 거두었습니다." },
+            { q: "임진왜란 때 선조는 의주로 피란하였다.", a: true, exp: "일본군이 한성에 다가오자 선조는 의주로 피란하고 명에 도움을 요청했습니다." },
+            { q: "임진왜란 때 선조는 평양으로 피란하였다.", a: false, exp: "선조는 의주로 피란하였습니다." },
+            { q: "의병은 나라에서 조직한 정규 군대이다.", a: false, exp: "의병은 백성이 자발적으로 조직한 군대입니다." },
+            { q: "곽재우는 임진왜란 때 활약한 의병장이다.", a: true, exp: "곽재우는 의령에서 의병을 일으킨 대표적인 의병장입니다." },
+            { q: "행주 대첩에서 권율 장군이 승리하였다.", a: true, exp: "권율이 이끄는 관군이 행주산성에서 일본군을 물리쳤습니다." },
+            { q: "거북선은 배 위에 거북 모양으로 지붕을 얹었다.", a: true, exp: "거북 모양의 지붕과 갑판을 얹어 적에게 돌격하는 데 유리했습니다." },
+            { q: "천자총통은 포탄을 발사하는 화포이다.", a: true, exp: "거북선 등 조선 배에 설치되어 있었습니다." },
+            { q: "이순신은 임진왜란 1년 전부터 외적의 침략에 대비하고 있었다.", a: true, exp: "식량을 마련하고 군함과 무기를 갖추며 대비했습니다." },
+            { q: "승병은 승려들이 조직한 군대이다.", a: true, exp: "승려들은 승병을 조직하여 나라를 지키는 데 힘을 보탰습니다." },
+            { q: "조선과 명의 연합군은 평양성을 되찾았다.", a: true, exp: "명의 지원군이 도착한 뒤 연합군이 평양성을 되찾았습니다." },
+            { q: "정유재란은 1597년에 일어났다.", a: true, exp: "일본이 다시 군대를 보내 조선을 침입한 것이 정유재란입니다." },
+            { q: "노량 해전에서 일본군을 크게 무찔렀다.", a: true, exp: "이순신의 수군이 일본으로 돌아가던 일본군을 노량에서 무찔렀습니다." },
+            { q: "임진왜란은 1598년에 끝났다.", a: true, exp: "도요토미 히데요시가 죽자 일본군이 물러가면서 전쟁이 끝났습니다." },
+            { q: "조총은 서양 상인이 일본에 전한 총이다.", a: true, exp: "노끈에 불을 붙여서 화약을 터뜨려 쏘는 총입니다." },
+            { q: "김시민은 진주 대첩에서 활약하였다.", a: true, exp: "김시민은 진주성에서 일본군을 물리친 장군입니다." },
+            { q: "휴정(서산대사)은 승병을 이끌었다.", a: true, exp: "휴정(서산대사)은 묘향산에서 승병을 이끌었습니다." },
+            { q: "유정(사명대사)은 금강산에서 승병을 이끌었다.", a: true, exp: "유정(사명대사)은 금강산에서 승병을 조직했습니다." },
+
+            // 병자호란
             { q: "광해군은 명과 후금 사이에서 중립 외교를 펼쳤다.", a: true, exp: "광해군은 명과 후금 사이에서 균형을 유지하려 했습니다." },
-            { q: "경복궁은 조선의 두 번째 궁궐이다.", a: false, exp: "경복궁은 조선이 첫 번째로 지은 궁궐입니다." },
-            { q: "숭례문은 한양의 남쪽 문으로 '예의'를 뜻한다.", a: true, exp: "숭례문은 '예(禮)'를 존중한다는 의미를 담았습니다." },
-            { q: "흥인지문은 한양의 동쪽 문이다.", a: true, exp: "흥인지문은 동쪽 문으로 '인자함(仁)'을 일으킨다는 뜻입니다." },
-            { q: "호패는 조선 시대 신분증과 같은 역할을 했다.", a: true, exp: "태종 때 16세 이상 남자에게 호패를 차게 하여 신분을 증명했습니다." },
-            { q: "조선 전기에는 산수화가 유행하였다.", a: true, exp: "산과 물이 어우러진 자연을 그리는 산수화가 유행했습니다." },
-            { q: "분청사기와 백자는 조선 전기의 도자기이다.", a: true, exp: "회청색 분청사기와 흰색 백자가 조선 전기에 만들어졌습니다." }
+            { q: "후금은 여진이 세운 나라이다.", a: true, exp: "여진이 후금을 세우고 명과 대립하였습니다." },
+            { q: "정묘호란은 1627년에 일어났다.", a: true, exp: "후금이 조선을 침략한 것이 정묘호란입니다." },
+            { q: "정묘호란 때 후금은 조선과 형제의 관계를 맺었다.", a: true, exp: "후금은 명과 전쟁 중이어서 조선과 형제의 관계를 맺고 돌아갔습니다." },
+            { q: "후금은 나라 이름을 '청'으로 바꾸었다.", a: true, exp: "세력이 더욱 강해진 후금은 나라 이름을 '청'으로 바꾸었습니다." },
+            { q: "병자호란 때 인조는 남한산성으로 피란하였다.", a: true, exp: "1636년 병자호란 때 인조는 남한산성으로 피란했습니다." },
+            { q: "병자호란은 일본의 침략으로 일어났다.", a: false, exp: "병자호란은 청나라의 침략으로 일어났습니다." },
+            { q: "병자호란 때 인조는 강화도로 피란하였다.", a: false, exp: "인조는 남한산성으로 피란하였습니다." },
+            { q: "최명길은 청과 화해하자고 주장하였다.", a: true, exp: "최명길을 중심으로 한 신하들은 청과 화해하자고 했습니다." },
+            { q: "김상헌은 청과 끝까지 싸우자고 주장하였다.", a: true, exp: "김상헌을 중심으로 한 신하들은 청군과 끝까지 싸우자고 했습니다." },
+            { q: "인조는 청의 황제에게 항복하였다.", a: true, exp: "강화도가 함락되는 등 상황이 어려워지자 인조는 항복했습니다." },
+            { q: "병자호란 후 조선은 청과 '임금과 신하의 관계'를 맺었다.", a: true, exp: "조선의 왕자와 신하, 많은 백성이 청으로 끌려갔습니다." },
+            { q: "남한산성은 유네스코 세계 유산이다.", a: true, exp: "다양한 시설을 잘 갖추었다고 손꼽히는 남한산성은 세계 유산입니다." },
+            { q: "남한산성은 한성을 지키기 위해 쌓은 성이다.", a: true, exp: "경기도 광주의 남한산 기슭에 자리 잡은 성입니다." },
+            { q: "수어장대는 군사를 지휘하고 적의 움직임을 살핀 곳이다.", a: true, exp: "남한산성 안에 있는 군사 시설입니다." },
+            { q: "행궁은 인조가 머물던 궁궐이다.", a: true, exp: "남한산성 안에 있는 왕이 머무를 수 있는 궁궐입니다." }
         ];
 
         // ============ 타임라인 데이터 ============
         const timelineEvents = [
+            // 조선 건국기
+            { year: 1368, event: "명나라 건국" },
             { year: 1388, event: "위화도 회군" },
-            { year: 1392, event: "조선 건국" },
+            { year: 1392, event: "조선 건국 (태조)" },
             { year: 1394, event: "한양 천도" },
+            { year: 1395, event: "경복궁 완공" },
+            { year: 1398, event: "1차 왕자의 난" },
+            { year: 1400, event: "2차 왕자의 난" },
+            { year: 1400, event: "태종 즉위" },
+
+            // 세종 시대
+            { year: 1418, event: "세종 즉위" },
+            { year: 1419, event: "쓰시마섬 정벌" },
+            { year: 1420, event: "집현전 설치" },
+            { year: 1434, event: "자격루 제작" },
+            { year: 1441, event: "측우기 발명" },
             { year: 1443, event: "훈민정음 창제" },
+            { year: 1446, event: "훈민정음 반포" },
+            { year: 1450, event: "세종 서거" },
+
+            // 조선 전기
+            { year: 1453, event: "계유정난" },
+            { year: 1455, event: "세조 즉위" },
+            { year: 1469, event: "성종 즉위" },
             { year: 1485, event: "경국대전 완성" },
+
+            // 임진왜란
             { year: 1592, event: "임진왜란 발발" },
-            { year: 1597, event: "정유재란" },
+            { year: 1592, event: "옥포 해전 승리" },
+            { year: 1592, event: "한산도 대첩" },
+            { year: 1593, event: "행주 대첩" },
+            { year: 1593, event: "평양성 탈환" },
+            { year: 1597, event: "정유재란 발발" },
+            { year: 1597, event: "명량 대첩" },
+            { year: 1598, event: "노량 해전" },
             { year: 1598, event: "임진왜란 종료" },
+
+            // 광해군과 호란
+            { year: 1608, event: "광해군 즉위" },
+            { year: 1623, event: "인조반정" },
             { year: 1627, event: "정묘호란" },
-            { year: 1636, event: "병자호란" }
+            { year: 1636, event: "병자호란" },
+            { year: 1637, event: "삼전도 굴욕" }
         ];
 
         // ============ 게임 상태 ============
@@ -538,7 +820,7 @@
             document.getElementById('oxGame').classList.remove('hidden');
 
             oxState = {
-                questions: shuffleArray([...oxQuestions]).slice(0, 15),
+                questions: shuffleArray([...oxQuestions]).slice(0, 20),
                 currentIndex: 0,
                 score: 0,
                 combo: 1,
