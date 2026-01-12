@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조선 역사 챌린지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .hearts {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+        }
+
+        .combo {
+            color: #ff9800 !important;
+        }
+
+        .mode-select {
+            text-align: center;
+        }
+
+        .mode-btn {
+            width: 100%;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-timeline {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .mode-ox {
+            background: linear-gradient(135deg, #e94560, #0f3460);
+            color: white;
+        }
+
+        .mode-desc {
+            font-size: 0.85rem;
+            font-weight: normal;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .question-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .ox-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .ox-btn {
+            flex: 1;
+            padding: 25px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ox-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .ox-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-o {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .btn-x {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+
+        .ox-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .timeline-instruction {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .timeline-cards {
+            min-height: 300px;
+        }
+
+        .timeline-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+        }
+
+        .timeline-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .timeline-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .timeline-card.correct {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+        }
+
+        .timeline-card.incorrect {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .card-year {
+            font-size: 0.85rem;
+            opacity: 0;
+            margin-top: 5px;
+        }
+
+        .timeline-card.show-year .card-year {
+            opacity: 0.8;
+        }
+
+        .card-event {
+            font-weight: bold;
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .feedback .explanation {
+            font-weight: normal;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #9e9e9e, #757575);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+        }
+
+        .result {
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #e94560;
+            margin: 20px 0;
+        }
+
+        .result-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-grade {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .timer-fill.warning {
+            background: linear-gradient(90deg, #ff9800, #ffc107);
+        }
+
+        .timer-fill.danger {
+            background: linear-gradient(90deg, #f44336, #e91e63);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .level-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .level-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .level-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>조선 역사 챌린지</h1>
+        <p class="subtitle">조선 전기의 역사를 게임으로 배워보세요!</p>
+
+        <!-- 메인 메뉴 -->
+        <div id="menu" class="mode-select">
+            <button class="mode-btn mode-ox" onclick="startOXQuiz()">
+                OX 스피드 퀴즈
+                <div class="mode-desc">빠르게 OX를 맞춰보세요!</div>
+            </button>
+            <button class="mode-btn mode-timeline" onclick="startTimeline()">
+                타임라인 정렬
+                <div class="mode-desc">역사적 사건을 순서대로 배열하세요</div>
+            </button>
+        </div>
+
+        <!-- OX 퀴즈 게임 -->
+        <div id="oxGame" class="hidden">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value hearts" id="oxHearts">❤️❤️❤️</div>
+                    <div class="stat-label">라이프</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="oxScore">0</div>
+                    <div class="stat-label">점수</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value combo" id="oxCombo">x1</div>
+                    <div class="stat-label">콤보</div>
+                </div>
+            </div>
+
+            <div class="timer-bar">
+                <div class="timer-fill" id="timerFill"></div>
+            </div>
+
+            <div class="progress-text" id="oxProgress">1 / 20</div>
+
+            <div class="question-box">
+                <div class="question-text" id="oxQuestion">문제가 여기에 표시됩니다</div>
+            </div>
+
+            <div class="feedback" id="oxFeedback">
+                <span id="feedbackText"></span>
+                <div class="explanation" id="feedbackExplanation"></div>
+            </div>
+
+            <div class="ox-buttons" id="oxButtons">
+                <button class="ox-btn btn-o" onclick="answerOX(true)">O</button>
+                <button class="ox-btn btn-x" onclick="answerOX(false)">X</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="backToMenu()">메뉴로</button>
+        </div>
+
+        <!-- 타임라인 게임 -->
+        <div id="timelineGame" class="hidden">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="tlRound">1</div>
+                    <div class="stat-label">라운드</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="tlScore">0</div>
+                    <div class="stat-label">점수</div>
+                </div>
+            </div>
+
+            <div class="level-select">
+                <button class="level-btn active" onclick="setLevel(3)">쉬움</button>
+                <button class="level-btn" onclick="setLevel(4)">보통</button>
+                <button class="level-btn" onclick="setLevel(5)">어려움</button>
+            </div>
+
+            <p class="timeline-instruction">카드를 드래그하여 시간순으로 정렬하세요<br>(위 → 아래: 과거 → 현재)</p>
+
+            <div class="timeline-cards" id="timelineCards"></div>
+
+            <div class="feedback" id="tlFeedback"></div>
+
+            <button class="btn btn-success" id="checkOrderBtn" onclick="checkTimelineOrder()">순서 확인</button>
+            <button class="btn btn-primary hidden" id="nextRoundBtn" onclick="nextTimelineRound()">다음 라운드</button>
+            <button class="btn btn-secondary" onclick="backToMenu()">메뉴로</button>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result" class="result hidden">
+            <h2>게임 종료!</h2>
+            <div class="result-score" id="finalScore">0</div>
+            <div class="result-text" id="resultText">점</div>
+            <div class="result-grade" id="resultGrade"></div>
+            <button class="btn btn-primary" onclick="backToMenu()">다시 하기</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ OX 퀴즈 데이터 ============
+        const oxQuestions = [
+            { q: "조선은 1392년에 건국되었다.", a: true, exp: "이성계가 1392년에 조선을 건국했습니다." },
+            { q: "훈민정음은 세종대왕이 만들었다.", a: true, exp: "세종대왕이 1443년에 훈민정음을 창제했습니다." },
+            { q: "훈민정음은 '백성을 가르치는 바른 소리'라는 뜻이다.", a: true, exp: "훈민정음(訓民正音)은 백성을 가르치는 바른 소리라는 의미입니다." },
+            { q: "훈민정음은 총 28자이다.", a: true, exp: "훈민정음은 스물여덟 자로 이루어져 있습니다." },
+            { q: "이성계는 위화도에서 군대를 돌이켜 권력을 잡았다.", a: true, exp: "1388년 위화도 회군으로 이성계가 권력을 장악했습니다." },
+            { q: "조선의 첫 번째 수도는 한양이었다.", a: false, exp: "조선 건국 후 1394년에 수도를 한양으로 옮겼습니다. 처음엔 개경이었습니다." },
+            { q: "경국대전은 조선의 법전이다.", a: true, exp: "경국대전은 성종 때 완성된 조선의 기본 법전입니다." },
+            { q: "앙부일구는 물시계이다.", a: false, exp: "앙부일구는 해시계이고, 물시계는 자격루입니다." },
+            { q: "자격루는 자동으로 시간을 알려주는 물시계이다.", a: true, exp: "자격루는 물이 흐르면 자동으로 종을 쳐서 시간을 알려줬습니다." },
+            { q: "장영실은 신분이 낮았지만 과학 기구를 만들었다.", a: true, exp: "세종은 신분이 낮은 장영실을 관리로 뽑아 기술을 연구하게 했습니다." },
+            { q: "측우기는 바람의 세기를 측정하는 기구이다.", a: false, exp: "측우기는 강우량(비의 양)을 측정하는 기구입니다." },
+            { q: "임진왜란은 1592년에 일어났다.", a: true, exp: "1592년 일본이 조선을 침략하여 임진왜란이 시작되었습니다." },
+            { q: "임진왜란 때 이순신은 육지에서 싸웠다.", a: false, exp: "이순신은 수군(해군)을 이끌고 바다에서 일본군과 싸웠습니다." },
+            { q: "한산도 대첩에서 학익진 전술이 사용되었다.", a: true, exp: "이순신의 수군이 학이 날개를 펼치는 모양의 학익진 전술로 승리했습니다." },
+            { q: "의병은 나라에서 조직한 정규 군대이다.", a: false, exp: "의병은 백성이 자발적으로 조직한 군대입니다." },
+            { q: "곽재우는 임진왜란 때 활약한 의병장이다.", a: true, exp: "곽재우는 의령에서 의병을 일으킨 대표적인 의병장입니다." },
+            { q: "행주 대첩에서 권율 장군이 승리하였다.", a: true, exp: "권율이 이끄는 관군이 행주산성에서 일본군을 물리쳤습니다." },
+            { q: "병자호란 때 인조는 남한산성으로 피란하였다.", a: true, exp: "1636년 병자호란 때 인조는 남한산성으로 피란했습니다." },
+            { q: "병자호란은 일본의 침략으로 일어났다.", a: false, exp: "병자호란은 청나라의 침략으로 일어났습니다." },
+            { q: "조선은 유교를 나라의 통치 원리로 삼았다.", a: true, exp: "조선은 유교의 가르침에 따라 나라를 다스렸습니다." },
+            { q: "삼강행실도는 유교의 가르침을 글과 그림으로 설명한 책이다.", a: true, exp: "삼강행실도에는 충신, 효자 등의 이야기가 실려 있습니다." },
+            { q: "조선 시대 양반은 과거를 치러 관리가 될 수 있었다.", a: true, exp: "양반 남성은 유교 경전을 공부하고 과거시험을 볼 수 있었습니다." },
+            { q: "신사임당은 조선의 대표적인 화가이다.", a: true, exp: "신사임당은 시, 글씨, 그림에 모두 뛰어난 예술가였습니다." },
+            { q: "신사임당의 아들 이이는 조선을 대표하는 학자가 되었다.", a: true, exp: "이이(율곡)는 조선 중기의 대표적인 유학자입니다." },
+            { q: "농사직설은 우리 땅에 맞는 농사법을 정리한 책이다.", a: true, exp: "세종 때 각 지역 농민들의 경험을 바탕으로 만든 농사책입니다." },
+            { q: "광해군은 명과 후금 사이에서 중립 외교를 펼쳤다.", a: true, exp: "광해군은 명과 후금 사이에서 균형을 유지하려 했습니다." },
+            { q: "경복궁은 조선의 두 번째 궁궐이다.", a: false, exp: "경복궁은 조선이 첫 번째로 지은 궁궐입니다." },
+            { q: "숭례문은 한양의 남쪽 문으로 '예의'를 뜻한다.", a: true, exp: "숭례문은 '예(禮)'를 존중한다는 의미를 담았습니다." },
+            { q: "흥인지문은 한양의 동쪽 문이다.", a: true, exp: "흥인지문은 동쪽 문으로 '인자함(仁)'을 일으킨다는 뜻입니다." },
+            { q: "호패는 조선 시대 신분증과 같은 역할을 했다.", a: true, exp: "태종 때 16세 이상 남자에게 호패를 차게 하여 신분을 증명했습니다." },
+            { q: "조선 전기에는 산수화가 유행하였다.", a: true, exp: "산과 물이 어우러진 자연을 그리는 산수화가 유행했습니다." },
+            { q: "분청사기와 백자는 조선 전기의 도자기이다.", a: true, exp: "회청색 분청사기와 흰색 백자가 조선 전기에 만들어졌습니다." }
+        ];
+
+        // ============ 타임라인 데이터 ============
+        const timelineEvents = [
+            { year: 1388, event: "위화도 회군" },
+            { year: 1392, event: "조선 건국" },
+            { year: 1394, event: "한양 천도" },
+            { year: 1443, event: "훈민정음 창제" },
+            { year: 1485, event: "경국대전 완성" },
+            { year: 1592, event: "임진왜란 발발" },
+            { year: 1597, event: "정유재란" },
+            { year: 1598, event: "임진왜란 종료" },
+            { year: 1627, event: "정묘호란" },
+            { year: 1636, event: "병자호란" }
+        ];
+
+        // ============ 게임 상태 ============
+        let oxState = {
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            combo: 1,
+            hearts: 3,
+            timer: null,
+            timeLeft: 100
+        };
+
+        let tlState = {
+            level: 3,
+            round: 1,
+            score: 0,
+            currentEvents: []
+        };
+
+        // ============ OX 퀴즈 ============
+        function startOXQuiz() {
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('oxGame').classList.remove('hidden');
+
+            oxState = {
+                questions: shuffleArray([...oxQuestions]).slice(0, 15),
+                currentIndex: 0,
+                score: 0,
+                combo: 1,
+                hearts: 3,
+                timer: null,
+                timeLeft: 100
+            };
+
+            updateOXDisplay();
+            showOXQuestion();
+        }
+
+        function showOXQuestion() {
+            if (oxState.currentIndex >= oxState.questions.length || oxState.hearts <= 0) {
+                endOXGame();
+                return;
+            }
+
+            const q = oxState.questions[oxState.currentIndex];
+            document.getElementById('oxQuestion').textContent = q.q;
+            document.getElementById('oxFeedback').className = 'feedback';
+            document.getElementById('oxButtons').querySelectorAll('button').forEach(btn => btn.disabled = false);
+
+            oxState.timeLeft = 100;
+            updateTimerBar();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(oxState.timer);
+            oxState.timer = setInterval(() => {
+                oxState.timeLeft -= 1.5;
+                updateTimerBar();
+
+                if (oxState.timeLeft <= 0) {
+                    clearInterval(oxState.timer);
+                    answerOX(null);
+                }
+            }, 100);
+        }
+
+        function updateTimerBar() {
+            const fill = document.getElementById('timerFill');
+            fill.style.width = Math.max(0, oxState.timeLeft) + '%';
+            fill.className = 'timer-fill';
+            if (oxState.timeLeft <= 30) fill.classList.add('danger');
+            else if (oxState.timeLeft <= 50) fill.classList.add('warning');
+        }
+
+        function answerOX(answer) {
+            clearInterval(oxState.timer);
+            document.getElementById('oxButtons').querySelectorAll('button').forEach(btn => btn.disabled = true);
+
+            const q = oxState.questions[oxState.currentIndex];
+            const feedback = document.getElementById('oxFeedback');
+            const feedbackText = document.getElementById('feedbackText');
+            const feedbackExp = document.getElementById('feedbackExplanation');
+
+            if (answer === q.a) {
+                const bonus = Math.floor(oxState.timeLeft / 10);
+                const points = (10 + bonus) * oxState.combo;
+                oxState.score += points;
+                oxState.combo = Math.min(oxState.combo + 1, 5);
+
+                feedbackText.textContent = `정답! +${points}점`;
+                feedbackExp.textContent = q.exp;
+                feedback.className = 'feedback correct';
+            } else {
+                oxState.hearts--;
+                oxState.combo = 1;
+
+                if (answer === null) {
+                    feedbackText.textContent = '시간 초과!';
+                } else {
+                    feedbackText.textContent = '틀렸습니다!';
+                }
+                feedbackExp.textContent = q.exp;
+                feedback.className = 'feedback incorrect';
+            }
+
+            updateOXDisplay();
+            oxState.currentIndex++;
+
+            setTimeout(() => {
+                showOXQuestion();
+            }, 2000);
+        }
+
+        function updateOXDisplay() {
+            document.getElementById('oxScore').textContent = oxState.score;
+            document.getElementById('oxCombo').textContent = 'x' + oxState.combo;
+            document.getElementById('oxHearts').textContent = '❤️'.repeat(oxState.hearts) + '🖤'.repeat(3 - oxState.hearts);
+            document.getElementById('oxProgress').textContent = `${Math.min(oxState.currentIndex + 1, oxState.questions.length)} / ${oxState.questions.length}`;
+        }
+
+        function endOXGame() {
+            clearInterval(oxState.timer);
+            document.getElementById('oxGame').classList.add('hidden');
+            showResult(oxState.score, 'OX 퀴즈');
+        }
+
+        // ============ 타임라인 게임 ============
+        function startTimeline() {
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('timelineGame').classList.remove('hidden');
+
+            tlState = { level: 3, round: 1, score: 0, currentEvents: [] };
+            updateTLDisplay();
+            generateTimelineRound();
+        }
+
+        function setLevel(level) {
+            tlState.level = level;
+            document.querySelectorAll('.level-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', [3, 4, 5][i] === level);
+            });
+            generateTimelineRound();
+        }
+
+        function generateTimelineRound() {
+            const shuffled = shuffleArray([...timelineEvents]);
+            tlState.currentEvents = shuffled.slice(0, tlState.level);
+
+            const container = document.getElementById('timelineCards');
+            container.innerHTML = '';
+
+            const displayOrder = shuffleArray([...tlState.currentEvents]);
+
+            displayOrder.forEach((event) => {
+                const card = document.createElement('div');
+                card.className = 'timeline-card';
+                card.draggable = true;
+                card.dataset.year = event.year;
+                card.innerHTML = `
+                    <div class="card-event">${event.event}</div>
+                    <div class="card-year">${event.year}년</div>
+                `;
+
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', handleDrop);
+
+                card.addEventListener('touchstart', handleTouchStart, { passive: false });
+                card.addEventListener('touchmove', handleTouchMove, { passive: false });
+                card.addEventListener('touchend', handleTouchEnd);
+
+                container.appendChild(card);
+            });
+
+            document.getElementById('tlFeedback').className = 'feedback';
+            document.getElementById('checkOrderBtn').classList.remove('hidden');
+            document.getElementById('nextRoundBtn').classList.add('hidden');
+        }
+
+        let draggedCard = null;
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (draggedCard !== this) {
+                const container = document.getElementById('timelineCards');
+                const cards = [...container.children];
+                const draggedIndex = cards.indexOf(draggedCard);
+                const dropIndex = cards.indexOf(this);
+
+                if (draggedIndex < dropIndex) {
+                    this.after(draggedCard);
+                } else {
+                    this.before(draggedCard);
+                }
+            }
+        }
+
+        let touchCard = null;
+
+        function handleTouchStart(e) {
+            touchCard = this;
+            this.classList.add('dragging');
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const container = document.getElementById('timelineCards');
+            const cards = [...container.children];
+
+            cards.forEach(card => {
+                if (card !== touchCard) {
+                    const rect = card.getBoundingClientRect();
+                    if (touch.clientY > rect.top && touch.clientY < rect.bottom) {
+                        const cardIndex = cards.indexOf(card);
+                        const touchIndex = cards.indexOf(touchCard);
+                        if (touchIndex < cardIndex) {
+                            card.after(touchCard);
+                        } else {
+                            card.before(touchCard);
+                        }
+                    }
+                }
+            });
+        }
+
+        function handleTouchEnd() {
+            if (touchCard) {
+                touchCard.classList.remove('dragging');
+                touchCard = null;
+            }
+        }
+
+        function checkTimelineOrder() {
+            const container = document.getElementById('timelineCards');
+            const cards = [...container.children];
+            const years = cards.map(card => parseInt(card.dataset.year));
+
+            let correct = true;
+            for (let i = 1; i < years.length; i++) {
+                if (years[i] < years[i - 1]) {
+                    correct = false;
+                    break;
+                }
+            }
+
+            const feedback = document.getElementById('tlFeedback');
+
+            cards.forEach(card => card.classList.add('show-year'));
+
+            if (correct) {
+                const points = tlState.level * 20;
+                tlState.score += points;
+                feedback.textContent = `정답! +${points}점`;
+                feedback.className = 'feedback correct';
+                cards.forEach(card => card.classList.add('correct'));
+            } else {
+                feedback.textContent = '순서가 틀렸습니다. 연도를 확인해보세요!';
+                feedback.className = 'feedback incorrect';
+
+                for (let i = 1; i < years.length; i++) {
+                    if (years[i] < years[i - 1]) {
+                        cards[i].classList.add('incorrect');
+                        cards[i - 1].classList.add('incorrect');
+                    }
+                }
+            }
+
+            updateTLDisplay();
+            document.getElementById('checkOrderBtn').classList.add('hidden');
+            document.getElementById('nextRoundBtn').classList.remove('hidden');
+        }
+
+        function nextTimelineRound() {
+            tlState.round++;
+            if (tlState.round > 5) {
+                endTimelineGame();
+            } else {
+                updateTLDisplay();
+                generateTimelineRound();
+            }
+        }
+
+        function updateTLDisplay() {
+            document.getElementById('tlRound').textContent = tlState.round + ' / 5';
+            document.getElementById('tlScore').textContent = tlState.score;
+        }
+
+        function endTimelineGame() {
+            document.getElementById('timelineGame').classList.add('hidden');
+            showResult(tlState.score, '타임라인');
+        }
+
+        // ============ 결과 화면 ============
+        function showResult(score, gameType) {
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('resultText').textContent = `${gameType} 점수`;
+
+            let grade = '';
+            if (score >= 200) grade = '역사 박사! 🎓';
+            else if (score >= 150) grade = '역사 달인! 🏆';
+            else if (score >= 100) grade = '역사 고수! ⭐';
+            else if (score >= 50) grade = '열심히 공부중! 📚';
+            else grade = '다시 도전! 💪';
+
+            document.getElementById('resultGrade').textContent = grade;
+        }
+
+        function backToMenu() {
+            clearInterval(oxState.timer);
+            document.getElementById('oxGame').classList.add('hidden');
+            document.getElementById('timelineGame').classList.add('hidden');
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('menu').classList.remove('hidden');
+        }
+
+        // ============ 유틸리티 ============
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
